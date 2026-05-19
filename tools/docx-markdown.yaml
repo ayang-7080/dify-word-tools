@@ -1,0 +1,68 @@
+identity:
+  name: docx-markdown
+  author: ayang
+  label:
+    en_US: 提取为Markdown格式
+    zh_Hans: 提取为Markdown格式
+    pt_BR: 提取为Markdown格式
+description:
+  human:
+    en_US: 将Docx文件转为Markdown格式的数据
+    zh_Hans: 将Docx文件转为Markdown格式的数据
+    pt_BR: 将Docx文件转为Markdown格式的数据
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    default: ""
+    label:
+      en_US: docx文件
+      zh_Hans: docx文件
+      pt_BR: docx文件
+    human_description:
+      en_US: docx文件
+      zh_Hans: docx文件
+      pt_BR: docx文件
+    llm_description: office-docx
+    form: llm
+  - name: host
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 主机地址(FILES_URL)
+      zh_Hans: 主机地址(FILES_URL)
+      pt_BR: 主机地址(FILES_URL)
+    human_description:
+      en_US: FILES_URL，可不填
+      zh_Hans: FILES_URL，可不填
+      pt_BR: FILES_URL，可不填
+    llm_description: office-docx
+    form: llm
+  - name: no_proxy
+    type: select
+    required: true
+    label:
+      en_US: No PROXY
+      zh_Hans: 关闭网络代理
+      pt_BR: 关闭网络代理
+    human_description:
+      en_US: 关闭系统中的网络代理
+      zh_Hans: 关闭系统中的网络代理
+      pt_BR: 关闭系统中的网络代理
+    default: close
+    options:
+      - label:
+          zh_Hans: 关闭
+          en_US: close
+        value: close
+      - label:
+          zh_Hans: 开启
+          en_US: open
+        value: open
+    llm_description: office-docx
+    form: form
+extra:
+  python:
+    source: tools/docx-markdown.py

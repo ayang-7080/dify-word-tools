@@ -1,0 +1,92 @@
+identity:
+  name: text-highlight
+  author: ayang
+  label:
+    en_US: 文字高亮处理
+    zh_Hans: 文字高亮处理
+    pt_BR: 文字高亮处理
+description:
+  human:
+    en_US: 对word中的固定文本进行高亮处理
+    zh_Hans: 对word中的固定文本进行高亮处理
+    pt_BR: 对word中的固定文本进行高亮处理
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Word file
+      zh_Hans: word文件
+      pt_BR: word文件
+    human_description:
+      en_US: word文件
+      zh_Hans: word文件
+      pt_BR: word文件
+    llm_description: office-word
+    form: llm
+
+
+  - name: texts
+    type: string
+    required: true
+    default: ""
+    label:
+      en_US: 待处理文本
+      zh_Hans: 待处理文本
+      pt_BR: 待处理文本
+    human_description:
+      en_US: word中待处理文本，一行一个
+      zh_Hans: word中待处理文本，一行一个
+      pt_BR: word中待处理文本，一行一个
+    llm_description: texts
+    form: llm
+
+  - name: font_color
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 高亮颜色
+      zh_Hans: 高亮颜色
+      pt_BR: 高亮颜色
+    human_description:
+      en_US: 高亮颜色，为空表示不设置
+      zh_Hans: 高亮颜色，为空表示不设置
+      pt_BR: 高亮颜色，为空表示不设置
+    llm_description: font_color
+    form: llm
+
+  - name: italic
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: 斜体
+      zh_Hans: 斜体
+      pt_BR: 斜体
+    human_description:
+      en_US: "将文字设置为斜体"
+      zh_Hans: "将文字设置为斜体"
+      pt_BR: "将文字设置为斜体"
+    llm_description: "italic"
+    form: form
+
+  - name: bold
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: 加粗
+      zh_Hans: 加粗
+      pt_BR: 加粗
+    human_description:
+      en_US: "将文字设置为加粗"
+      zh_Hans: "将文字设置为加粗"
+      pt_BR: "将文字设置为加粗"
+    llm_description: "bold"
+    form: form
+
+extra:
+  python:
+    source: tools/expand/text-highlight.py

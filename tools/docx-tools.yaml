@@ -1,0 +1,90 @@
+identity:
+  name: docx-tools
+  author: ayang
+  label:
+    en_US: 生成docx
+    zh_Hans: 生成docx
+    pt_BR: 生成docx
+description:
+  human:
+    en_US: 通过json数据生成docx文件,包含表格、图片、自定义样式
+    zh_Hans: 通过json数据生成docx文件,包含表格、图片、自定义样式
+    pt_BR: 通过json数据生成docx文件,包含表格、图片、自定义样式
+  llm: office-docx
+parameters:
+  - name: filename
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: filename
+      zh_Hans: 文件名称
+      pt_BR: 文件名称
+    human_description:
+      en_US: 生成的文件名称
+      zh_Hans: 生成的文件名称(默认随机)
+      pt_BR: 生成的文件名称(默认随机)
+    llm_description: office-docx
+    form: llm
+  - name: page_padding
+    type: string
+    required: true
+    default: 2
+    label:
+      en_US: page padding
+      zh_Hans: 页边距
+      pt_BR: 页边距
+    human_description:
+      en_US: page padding
+      zh_Hans: 文档中每个页面边距
+      pt_BR: page padding
+    llm_description: office-docx
+    form: llm
+  - name: output_data
+    type: string
+    required: true
+    default: ""
+    label:
+      en_US: output data
+      zh_Hans: JSON数据
+      pt_BR: JSON数据
+    human_description:
+      en_US: 待转换的JSON数据(严格按照格式)
+      zh_Hans: 待转换的JSON数据(严格按照格式)
+      pt_BR: 待转换的JSON数据(严格按照格式)
+    llm_description: office-docx
+    form: llm
+
+  - name: enable_line
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: enable_line
+      zh_Hans: 行号展示
+      pt_BR: enable_line
+    human_description:
+      en_US: "是否在文档中开启行号展示（从1开始,连续编号）"
+      zh_Hans: "是否在文档中开启行号展示（从1开始,连续编号）"
+      pt_BR: "是否在文档中开启行号展示（从1开始,连续编号）"
+    llm_description: "enable_line"
+    form: form
+
+  - name: enable_page
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: enable_page
+      zh_Hans: 页码展示
+      pt_BR: enable_page
+    human_description:
+      en_US: "是否在文档中开启页码展示（从1开始,连续编号）"
+      zh_Hans: "是否在文档中开启页码展示（从1开始,连续编号）"
+      pt_BR: "是否在文档中开启页码展示（从1开始,连续编号）"
+    llm_description: "enable_page"
+    form: form
+
+extra:
+  python:
+    source: tools/docx-tools.py

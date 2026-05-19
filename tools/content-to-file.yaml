@@ -1,0 +1,64 @@
+identity:
+  name: content-to-file
+  author: ayang
+  label:
+    en_US: 内容转文件
+    zh_Hans: 内容转文件
+    pt_BR: 内容转文件
+description:
+  human:
+    en_US: 将内容转为指定格式的文件
+    zh_Hans: 将内容转为指定格式的文件
+    pt_BR: 将内容转为指定格式的文件
+  llm: office-docx
+parameters:
+  - name: filename
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: filename
+      zh_Hans: 文件名称
+      pt_BR: 文件名称
+    human_description:
+      en_US: 生成的文件名称
+      zh_Hans: 生成的文件名称(默认随机)
+      pt_BR: 生成的文件名称(默认随机)
+    llm_description: office-docx
+    form: llm
+  - name: output_data
+    type: string
+    required: true
+    default: ""
+    label:
+      en_US: output data
+      zh_Hans: 内容
+      pt_BR: 内容
+    human_description:
+      en_US: 要输出的内容
+      zh_Hans: 要输出的内容
+      pt_BR: 要输出的内容
+    llm_description: office-docx
+    form: llm
+  - name: file_type
+    type: select
+    required: true
+    label:
+      en_US: 输出文件类型
+      zh_Hans: 输出文件类型
+      pt_BR: 输出文件类型
+    human_description:
+      en_US: 输出文件类型
+      zh_Hans: 输出文件类型
+      pt_BR: 输出文件类型
+    default: txt
+    options:
+      - label:
+          zh_Hans: .txt
+          en_US: .txt
+        value: txt
+    llm_description: office-docx
+    form: form
+extra:
+  python:
+    source: tools/content-to-file.py

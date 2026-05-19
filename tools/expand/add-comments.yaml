@@ -1,0 +1,44 @@
+identity:
+  name: add-comments
+  author: ayang
+  label:
+    en_US: 添加批注
+    zh_Hans: 添加批注
+    pt_BR: 添加批注
+description:
+  human:
+    en_US: 给指定文本添加批注
+    zh_Hans: 给指定文本添加批注
+    pt_BR: 给指定文本添加批注
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Word file
+      zh_Hans: word文件
+      pt_BR: word文件
+    human_description:
+      en_US: word文件
+      zh_Hans: word文件
+      pt_BR: word文件
+    llm_description: office-word
+    form: llm
+  - name: comments
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 批注内容(json字符串)
+      zh_Hans: 批注内容(json字符串)
+      pt_BR: 批注内容(json字符串)
+    human_description:
+      en_US: 批注内容，格式：{"原文段落1":"批注内容1","原文段落2":"批注内容2"}
+      zh_Hans: 批注内容，格式：{"原文段落1":"批注内容1","原文段落2":"批注内容2"}
+      pt_BR: 批注内容，格式：{"原文段落1":"批注内容1","原文段落2":"批注内容2"}
+    llm_description: comments
+    form: llm
+extra:
+  python:
+    source: tools/expand/add-comments.py

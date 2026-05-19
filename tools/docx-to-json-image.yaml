@@ -1,0 +1,81 @@
+identity:
+  name: docx-to-json-image
+  author: ayang
+  label:
+    en_US: 提取为Json格式(仅图片)
+    zh_Hans: 提取为Json格式(仅图片)
+    pt_BR: 提取为Json格式(仅图片)
+description:
+  human:
+    en_US: 将docx内容中的段落以json格式输出,含图片、表格、样式
+    zh_Hans: 将docx内容中的段落以json格式输出,含图片、表格、样式
+    pt_BR: 将docx内容中的段落以json格式输出,含图片、表格、样式
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Docx file
+      zh_Hans: Docx文件
+      pt_BR: Docx文件
+    human_description:
+      en_US: Docx文件
+      zh_Hans: Docx文件
+      pt_BR: Docx文件
+    llm_description: office-docx
+    form: llm
+  - name: image_index
+    type: number
+    required: false
+    default: ""
+    label:
+      en_US: 图片下标
+      zh_Hans: 图片下标
+      pt_BR: 图片下标
+    human_description:
+      en_US: 图片下标
+      zh_Hans: 图片下标
+      pt_BR: 图片下标
+    llm_description: office-docx
+    form: llm
+  - name: host
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 主机地址(FILES_URL)
+      zh_Hans: 主机地址(FILES_URL)
+      pt_BR: 主机地址(FILES_URL)
+    human_description:
+      en_US: FILES_URL，可不填
+      zh_Hans: FILES_URL，可不填
+      pt_BR: FILES_URL，可不填
+    llm_description: office-docx
+    form: llm
+  - name: no_proxy
+    type: select
+    required: true
+    label:
+      en_US: No PROXY
+      zh_Hans: 关闭网络代理
+      pt_BR: 关闭网络代理
+    human_description:
+      en_US: 关闭系统中的网络代理
+      zh_Hans: 关闭系统中的网络代理
+      pt_BR: 关闭系统中的网络代理
+    default: close
+    options:
+      - label:
+          zh_Hans: 关闭
+          en_US: close
+        value: close
+      - label:
+          zh_Hans: 开启
+          en_US: open
+        value: open
+    llm_description: office-docx
+    form: form
+extra:
+  python:
+    source: tools/docx-to-json-image.py

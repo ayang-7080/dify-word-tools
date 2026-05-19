@@ -1,0 +1,90 @@
+identity:
+  name: docx-to-text
+  author: ayang
+  label:
+    en_US: 提取纯文本
+    zh_Hans: 提取纯文本
+    pt_BR: 提取纯文本
+description:
+  human:
+    en_US: 将docx内容以纯文本格式输出
+    zh_Hans: 将docx内容以纯文本格式输出
+    pt_BR: 将docx内容以纯文本格式输出
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Docx file
+      zh_Hans: Docx文件
+      pt_BR: Docx文件
+    human_description:
+      en_US: Docx文件
+      zh_Hans: Docx文件
+      pt_BR: Docx文件
+    llm_description: office-docx
+    form: llm
+  - name: output_format
+    type: select
+    required: true
+    label:
+      en_US: 输出格式
+      zh_Hans: 输出格式
+      pt_BR: 输出格式
+    human_description:
+      en_US: 输出格式
+      zh_Hans: 输出格式
+      pt_BR: 输出格式
+    default: text
+    options:
+      - label:
+          zh_Hans: 文本
+          en_US: text
+        value: text
+      - label:
+          zh_Hans: Json
+          en_US: json
+        value: json
+    llm_description: office-docx
+    form: form
+  - name: host
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 主机地址(FILES_URL)
+      zh_Hans: 主机地址(FILES_URL)
+      pt_BR: 主机地址(FILES_URL)
+    human_description:
+      en_US: FILES_URL，可不填
+      zh_Hans: FILES_URL，可不填
+      pt_BR: FILES_URL，可不填
+    llm_description: office-docx
+    form: llm
+  - name: no_proxy
+    type: select
+    required: true
+    label:
+      en_US: No PROXY
+      zh_Hans: 关闭网络代理
+      pt_BR: 关闭网络代理
+    human_description:
+      en_US: 关闭系统中的网络代理
+      zh_Hans: 关闭系统中的网络代理
+      pt_BR: 关闭系统中的网络代理
+    default: close
+    options:
+      - label:
+          zh_Hans: 关闭
+          en_US: close
+        value: close
+      - label:
+          zh_Hans: 开启
+          en_US: open
+        value: open
+    llm_description: office-docx
+    form: form
+extra:
+  python:
+    source: tools/docx-to-text.py

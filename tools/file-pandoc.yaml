@@ -1,0 +1,126 @@
+identity:
+  name: docx-markdown-pandoc
+  author: ayang
+  label:
+    en_US: 提取文档内容
+    zh_Hans: 提取文档内容
+    pt_BR: 提取文档内容
+description:
+  human:
+    en_US: 提取出文件中的内容并输出
+    zh_Hans: 提取出文件中的内容并输出
+    pt_BR: 提取出文件中的内容并输出
+  llm: office-docx
+parameters:
+  - name: file
+    type: file
+    required: true
+    default: ""
+    label:
+      en_US: 文件
+      zh_Hans: 文件
+      pt_BR: 文件
+    human_description:
+      en_US: 文件
+      zh_Hans: 文件
+      pt_BR: docx文件
+    llm_description: office-docx
+    form: llm
+
+  - name: output_format
+    type: select
+    required: true
+    label:
+      en_US: output_format
+      zh_Hans: 输出格式
+      pt_BR: 输出格式
+    human_description:
+      en_US: 文件输出格式
+      zh_Hans: 文件输出格式
+      pt_BR: 文件输出格式
+    default: markdown
+    options:
+      - label:
+          zh_Hans: markdown
+          en_US: markdown
+        value: markdown
+      - label:
+          zh_Hans: json
+          en_US: json
+        value: json
+      - label:
+          zh_Hans: commonmark
+          en_US: commonmark
+        value: commonmark
+      - label:
+          zh_Hans: commonmark_x
+          en_US: commonmark_x
+        value: commonmark_x
+      - label:
+          zh_Hans: markdown_phpextra
+          en_US: markdown_phpextra
+        value: markdown_phpextra
+      - label:
+          zh_Hans: markdown_mmd
+          en_US: markdown_mmd
+        value: markdown_mmd
+      - label:
+          zh_Hans: markdown_strict
+          en_US: markdown_strict
+        value: markdown_strict
+      - label:
+          zh_Hans: djot
+          en_US: djot
+        value: djot
+      - label:
+          zh_Hans: html
+          en_US: html
+        value: html
+      - label:
+          zh_Hans: rtf
+          en_US: rtf
+        value: rtf
+
+    llm_description: office-docx
+    form: form
+
+  - name: host
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 主机地址(FILES_URL)
+      zh_Hans: 主机地址(FILES_URL)
+      pt_BR: 主机地址(FILES_URL)
+    human_description:
+      en_US: FILES_URL，可不填
+      zh_Hans: FILES_URL，可不填
+      pt_BR: FILES_URL，可不填
+    llm_description: office-docx
+    form: llm
+  - name: no_proxy
+    type: select
+    required: true
+    label:
+      en_US: No PROXY
+      zh_Hans: 关闭网络代理
+      pt_BR: 关闭网络代理
+    human_description:
+      en_US: 关闭系统中的网络代理
+      zh_Hans: 关闭系统中的网络代理
+      pt_BR: 关闭系统中的网络代理
+    default: close
+    options:
+      - label:
+          zh_Hans: 关闭
+          en_US: close
+        value: close
+      - label:
+          zh_Hans: 开启
+          en_US: open
+        value: open
+    llm_description: office-docx
+    form: form
+extra:
+  python:
+    source: tools/file-pandoc.py

@@ -1,0 +1,59 @@
+identity:
+  name: template-create-word
+  author: ayang
+  label:
+    en_US: 通过模板生成word
+    zh_Hans: 通过模板生成word
+    pt_BR: 通过模板生成word
+description:
+  human:
+    en_US: 通过已有模板生成word
+    zh_Hans: 通过已有模板生成word
+    pt_BR: 通过已有模板生成word
+  llm: office-docx
+parameters:
+  - name: template_file
+    type: file
+    required: true
+    label:
+      en_US: template file
+      zh_Hans: 模板文件
+      pt_BR: template file
+    human_description:
+      en_US: template file
+      zh_Hans: template file
+      pt_BR: template file
+    llm_description: template file
+    form: llm
+  - name: filename
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: filename
+      zh_Hans: 文件名称
+      pt_BR: 文件名称
+    human_description:
+      en_US: 生成的文件名称
+      zh_Hans: 生成的文件名称(默认随机)
+      pt_BR: 生成的文件名称(默认随机)
+    llm_description: office-docx
+    form: llm
+  - name: in_data
+    type: string
+    required: true
+    default: ""
+    label:
+      en_US: JSON字符串(模板内容)
+      zh_Hans: JSON字符串(模板内容)
+      pt_BR: JSON字符串(模板内容)
+    human_description:
+      en_US: JSON字符串(模板内容)
+      zh_Hans: JSON字符串(模板内容)
+      pt_BR: JSON字符串(模板内容)
+    llm_description: JSON字符串(模板内容)
+    form: llm
+
+extra:
+  python:
+    source: tools/docxtpl/template-create-word.py

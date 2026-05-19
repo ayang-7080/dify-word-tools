@@ -1,0 +1,81 @@
+identity:
+  name: set-superscript
+  author: ayang
+  label:
+    en_US: 设置上标
+    zh_Hans: 设置上标
+    pt_BR: 设置上标
+description:
+  human:
+    en_US: 将文中指定格式的字符设置为上标
+    zh_Hans: 将文中指定格式的字符设置为上标
+    pt_BR: 将文中指定格式的字符设置为上标
+  llm: set-superscript
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Word file
+      zh_Hans: word文件
+      pt_BR: word文件
+    human_description:
+      en_US: word文件
+      zh_Hans: word文件
+      pt_BR: word文件
+    llm_description: office-word
+    form: llm
+  - name: color
+    type: string
+    required: false
+    default: "#0000FF"
+    label:
+      en_US: 上标颜色
+      zh_Hans: 上标颜色
+      pt_BR: 上标颜色
+    human_description:
+      en_US: 上标颜色
+      zh_Hans: 上标颜色
+      pt_BR: 上标颜色
+    llm_description: color
+    form: llm
+  - name: content_type
+    type: select
+    required: true
+    label:
+      en_US: 识别内容格式
+      zh_Hans: 识别内容格式
+      pt_BR: 识别内容格式
+    human_description:
+      en_US: 识别内容格式
+      zh_Hans: 识别内容格式
+      pt_BR: 识别内容格式
+    default: citation
+    options:
+      - label:
+          zh_Hans: "[]符号包裹"
+          en_US: citation
+        value: citation
+      - label:
+          zh_Hans: 自定义正则
+          en_US: 自定义正则
+        value: customize_regex
+    form: llm
+
+  - name: in_regex
+    type: string
+    required: false
+    default: ""
+    label:
+      en_US: 自定义正则表达式
+      zh_Hans: 自定义正则表达式
+      pt_BR: 自定义正则表达式
+    human_description:
+      en_US: 自定义正则表达式
+      zh_Hans: 自定义正则表达式
+      pt_BR: 自定义正则表达式
+    llm_description: in_regex
+    form: llm
+extra:
+  python:
+    source: tools/expand/set-superscript.py

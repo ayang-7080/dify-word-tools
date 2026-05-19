@@ -1,0 +1,30 @@
+identity:
+  author: ayang
+  name: docx-tools
+  label:
+    en_US: docx-tools
+    zh_Hans: docx-tools
+    pt_BR: docx-tools
+  description:
+    en_US: office-docx
+    zh_Hans: office-docx
+    pt_BR: office-docx
+  icon: icon.svg
+tools:
+  - tools/docx-tools.yaml
+  - tools/content-to-file.yaml
+  - tools/docx-markdown.yaml
+  - tools/docx-to-json.yaml
+  - tools/docx-to-json-text.yaml
+  - tools/docx-to-json-image.yaml
+  - tools/docx-to-text.yaml
+#  - tools/file-pandoc.yaml
+  - tools/expand/regex-highlight.yaml
+  - tools/expand/text-highlight.yaml
+  - tools/expand/add-comments.yaml
+  - tools/expand/set-superscript.yaml
+
+  - tools/docxtpl/template-create-word.yaml
+extra:
+  python:
+    source: provider/docx-tools.py
