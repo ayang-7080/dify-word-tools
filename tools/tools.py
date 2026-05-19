@@ -1,6 +1,9 @@
 import os
 import time
 import traceback
+import shutil
+import subprocess
+import tempfile
 from contextlib import contextmanager
 from typing import Optional
 
@@ -23,10 +26,183 @@ from docx.oxml.shared import OxmlElement
 from docx.oxml.ns import qn, nsdecls
 
 from collections import Counter
+
+
+IMAGE_MIME_TYPES = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".bmp": "image/bmp",
+    ".tif": "image/tiff",
+    ".tiff": "image/tiff",
+    ".webp": "image/webp",
+    ".emf": "image/x-emf",
+    ".wmf": "image/wmf",
+}
+
+PIL_FORMAT_EXTENSIONS = {
+    "PNG": ".png",
+    "JPEG": ".jpg",
+    "JPG": ".jpg",
+    "GIF": ".gif",
+    "BMP": ".bmp",
+    "TIFF": ".tiff",
+    "WEBP": ".webp",
+}
+
+WEB_SAFE_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+RASTER_IMAGE_EXTENSIONS_REQUIRING_CONVERSION = {".bmp", ".tif", ".tiff"}
+VECTOR_IMAGE_EXTENSIONS_REQUIRING_CONVERSION = {".emf", ".wmf"}
+
+
 def generate_timestamp_random():
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     random_suffix = random.randint(1000, 9999)
     return f"{timestamp}{random_suffix}"
+
+
+def _replace_extension(filename: str, extension: str) -> str:
+    root, _ = os.path.splitext(filename or "image")
+    return f"{root or 'image'}{extension}"
+
+
+def _mime_type_for_extension(extension: str) -> str:
+    return IMAGE_MIME_TYPES.get(extension.lower(), "application/octet-stream")
+
+
+def _image_extension_from_pillow(image_data: bytes) -> str | None:
+    try:
+        with Image.open(BytesIO(image_data)) as img:
+            return PIL_FORMAT_EXTENSIONS.get((img.format or "").upper())
+    except Exception:
+        return None
+
+
+def _convert_raster_image_to_png(image_data: bytes) -> bytes:
+    with Image.open(BytesIO(image_data)) as img:
+        try:
+            img.seek(0)
+        except EOFError:
+            pass
+
+        if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+            img = img.convert("RGBA")
+        elif img.mode != "RGB":
+            img = img.convert("RGB")
+
+        output_stream = BytesIO()
+        img.save(output_stream, format="PNG")
+        output_stream.seek(0)
+        return output_stream.getvalue()
+
+
+def _convert_with_magick(input_path: str, output_path: str) -> bool:
+    magick = shutil.which("magick")
+    if not magick:
+        return False
+
+    result = subprocess.run(
+        [magick, input_path, output_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=60,
+        check=False,
+    )
+    return result.returncode == 0 and os.path.exists(output_path)
+
+
+def _convert_with_libreoffice(input_path: str, output_dir: str) -> str | None:
+    office = shutil.which("soffice") or shutil.which("libreoffice")
+    if not office:
+        return None
+
+    result = subprocess.run(
+        [office, "--headless", "--convert-to", "png", "--outdir", output_dir, input_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=60,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+
+    output_path = os.path.join(output_dir, f"{os.path.splitext(os.path.basename(input_path))[0]}.png")
+    return output_path if os.path.exists(output_path) else None
+
+
+def _convert_vector_image_to_png(image_data: bytes, extension: str) -> bytes | None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        input_path = os.path.join(temp_dir, f"image{extension}")
+        output_path = os.path.join(temp_dir, "image.png")
+
+        with open(input_path, "wb") as file:
+            file.write(image_data)
+
+        try:
+            if _convert_with_magick(input_path, output_path):
+                with open(output_path, "rb") as file:
+                    return file.read()
+        except Exception:
+            pass
+
+        try:
+            libreoffice_output = _convert_with_libreoffice(input_path, temp_dir)
+            if libreoffice_output:
+                with open(libreoffice_output, "rb") as file:
+                    return file.read()
+        except Exception:
+            pass
+
+    return None
+
+
+def normalize_extracted_image(image_data: bytes, filename: str) -> dict:
+    original_extension = os.path.splitext(filename or "")[1].lower()
+    detected_extension = _image_extension_from_pillow(image_data)
+    extension = detected_extension or original_extension
+    original_mime_type = _mime_type_for_extension(extension or original_extension)
+
+    result = {
+        "data": image_data,
+        "filename": filename or _replace_extension("image", extension or ".bin"),
+        "extension": extension or original_extension,
+        "mime_type": original_mime_type,
+        "converted": False,
+        "original_filename": filename,
+        "original_mime_type": original_mime_type,
+    }
+
+    if extension in RASTER_IMAGE_EXTENSIONS_REQUIRING_CONVERSION:
+        png_data = _convert_raster_image_to_png(image_data)
+        result.update({
+            "data": png_data,
+            "filename": _replace_extension(filename, ".png"),
+            "extension": ".png",
+            "mime_type": "image/png",
+            "converted": True,
+        })
+        return result
+
+    if extension in VECTOR_IMAGE_EXTENSIONS_REQUIRING_CONVERSION:
+        png_data = _convert_vector_image_to_png(image_data, extension)
+        if png_data:
+            result.update({
+                "data": png_data,
+                "filename": _replace_extension(filename, ".png"),
+                "extension": ".png",
+                "mime_type": "image/png",
+                "converted": True,
+            })
+        return result
+
+    if extension in WEB_SAFE_IMAGE_EXTENSIONS:
+        result.update({
+            "filename": _replace_extension(filename, extension),
+            "mime_type": _mime_type_for_extension(extension),
+        })
+
+    return result
 
 def check_proxy():
     resp = httpx.get("http://httpbin.org/ip")
@@ -213,7 +389,8 @@ def extract_docx_to_json(docx_path,table_markdown = False):
                         image_path = "word/" + rels_map[r_embed]
                         if image_path in docx_zip.namelist():
                             image_data = docx_zip.read(image_path)
-                            b64 = base64.b64encode(image_data).decode()
+                            image_info = normalize_extracted_image(image_data, os.path.basename(image_path))
+                            b64 = base64.b64encode(image_info["data"]).decode()
 
                             # 获取图片大小
                             width_pt = height_pt = width_cm = height_cm = None
@@ -232,8 +409,13 @@ def extract_docx_to_json(docx_path,table_markdown = False):
 
                             result.append({
                                 "type": "image",
-                                "filename": os.path.basename(image_path),
+                                "filename": image_info["filename"],
                                 "content": b64,
+                                "mime_type": image_info["mime_type"],
+                                "extension": image_info["extension"],
+                                "converted": image_info["converted"],
+                                "original_filename": image_info["original_filename"],
+                                "original_mime_type": image_info["original_mime_type"],
                                 "size": {
                                     "width_pt": width_pt,
                                     "height_pt": height_pt,

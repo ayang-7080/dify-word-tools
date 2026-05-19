@@ -43,6 +43,8 @@ class DocxToJsonImageTool(Tool):
                 image_list.append({
                     "type":"image",
                     "content":data["content"] ,
+                    "filename": data.get("filename", f"image_{image_index}.png"),
+                    "mime_type": data.get("mime_type", "application/octet-stream"),
                     "image_index": image_index,
                 })
                 data["content"] = image_index
@@ -58,8 +60,8 @@ class DocxToJsonImageTool(Tool):
             image = image_list[in_image_index]
             image_data = base64.b64decode(image.get("content"))  # 假设你保留了原始 base64
             yield self.create_blob_message(image_data, {
-                'mime_type': 'image/png',
-                'filename': f'image_{in_image_index}.png'
+                'mime_type': image.get("mime_type", "application/octet-stream"),
+                'filename': image.get("filename", f'image_{in_image_index}.bin')
             })
         else:
             for image in image_list:
@@ -67,12 +69,11 @@ class DocxToJsonImageTool(Tool):
                     image_index = image.get("image_index")
                     image_data = base64.b64decode(image.get("content"))  # 假设你保留了原始 base64
                     yield self.create_blob_message(image_data, {
-                        'mime_type': 'image/png',
-                        'filename': f'image_{image_index}.png'
+                        'mime_type': image.get("mime_type", "application/octet-stream"),
+                        'filename': image.get("filename", f'image_{image_index}.bin')
                     })
 
         yield self.create_text_message(f"！")
-
 
 
 
